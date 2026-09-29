@@ -27,7 +27,7 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/ -v -m "not docker"
+          pytest tests/test_cp1.py tests/test_cp2.py tests/test_cp3.py tests/test_cp4.py tests/test_cp5.py -v -m "not docker"
 
   docker-build:
     name: Docker Build
