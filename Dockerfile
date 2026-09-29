@@ -1,34 +1,54 @@
 # ═══════════════════════════════════════════════════════════════════
 # CP2 — Containerization
-#
-# Dưới đây là Dockerfile "chạy được nhưng chưa production": một stage,
-# chạy bằng user root, không có health check, base image nặng.
-#
-# NHIỆM VỤ: sửa file này thành bản production-ready. Yêu cầu:
-#   [ ] Multi-stage build: stage `builder` cài dependency, stage runtime
-#       chỉ copy kết quả sang → image nhỏ hơn, không mang theo compiler.
-#       Cú pháp: `FROM python:3.11-slim AS builder`
-#   [ ] Base image slim (hoặc alpine), không dùng `python:3.11` bản đầy đủ
-#   [ ] COPY requirements.txt và pip install TRƯỚC khi COPY source code
-#       (Docker cache theo layer: sửa 1 dòng code không phải cài lại thư viện)
-#   [ ] Tạo user thường và chuyển sang bằng lệnh `USER` — container chạy
-#       root nghĩa là ai thoát được khỏi app cũng thành root trên host
-#   [ ] Có `HEALTHCHECK` gọi vào endpoint /health
-#   [ ] Đọc cổng từ biến môi trường PORT (cloud tự gán cổng, không cố định 8000)
-#
-# Kiểm tra:  pytest tests/test_cp2.py -v
-# Build thử: docker build -t day12-agent:prod .
-#            docker images day12-agent:prod     # xem dung lượng
+# Multi-stage build: builder → runtime
 # ═══════════════════════════════════════════════════════════════════
 
-FROM python:3.11
+
+# =========================
+# Stage 1: Builder
+# =========================
+FROM python:3.11-slim AS builder
+
+WORKDIR /build
+
+# Copy dependency trước để tận dụng Docker cache
+COPY requirements.txt .
+
+# Tạo virtual environment và cài dependency
+RUN python -m venv /opt/venv \
+    && /opt/venv/bin/pip install --upgrade pip \
+    && /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+
+
+# =========================
+# Stage 2: Runtime
+# =========================
+FROM python:3.11-slim AS runtime
 
 WORKDIR /app
 
-COPY . .
+# Copy environment đã cài dependency từ builder
+COPY --from=builder /opt/venv /opt/venv
 
-RUN pip install -r requirements.txt
+# Copy source code sau khi dependency đã được cài
+COPY app ./app
+COPY utils ./utils
 
+# Tạo user thường, không chạy bằng root
+RUN useradd --create-home --shell /bin/bash appuser
+
+# Sử dụng Python trong virtual environment
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Container chạy bằng user thường
+USER appuser
+
+# Port mặc định để document
 EXPOSE 8000
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Health check endpoint /health
+HEALTHCHECK --interval=30s --timeout=5s --start-period=10s --retries=3 \
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://127.0.0.1:' + __import__('os').environ.get('PORT', '8000') + '/health')" || exit 1
+
+# PORT do cloud/environment cung cấp, mặc định 8000
+CMD ["sh", "-c", "uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000}"]
