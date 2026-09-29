@@ -6,7 +6,7 @@
 > Cách trả lời: thay dòng `> *Câu trả lời của bạn*` bằng câu trả lời.
 > `grade.py` đếm số câu đã trả lời (15 điểm cho 10 câu).
 >
-> Họ và tên: ..........................  Mã học viên: ..........................
+> Họ và tên: Nguyễn Hoàng Anh  Mã học viên: 2A202602811.
 
 ---
 
@@ -49,7 +49,7 @@ Giải thích: phần dung lượng chênh lệch đó là những gì?
 
 > *Hiện tại tôi chưa đo được dung lượng image thực tế vì Docker Engine trên máy chưa khởi động được do virtualization chưa được bật. Vì vậy tôi không ghi số MB ước lượng để tránh nhầm với số đo thực tế.
 
-Về nguyên lý, bản multi-stage nhỏ hơn vì image runtime chỉ giữ Python runtime, virtual environment và source code cần thiết. Các thành phần phục vụ quá trình build như cache của pip và các file trung gian của build stage không được đưa sang runtime image.*
+> Về nguyên lý, bản multi-stage nhỏ hơn vì image runtime chỉ giữ Python runtime, virtual environment và source code cần thiết. Các thành phần phục vụ quá trình build như cache của pip và các file trung gian của build stage không được đưa sang runtime image.*
 
 ---
 
@@ -61,7 +61,7 @@ layer nào được dùng lại từ cache, layer nào phải chạy lại? Nế
 
 > *Khi chỉ sửa một ký tự trong app/main.py, các layer trước bước COPY app vẫn được Docker lấy lại từ cache, đặc biệt là layer cài dependencies. Các layer từ COPY app trở đi phải được build lại vì nội dung source code đã thay đổi.
 
-Nếu đặt COPY . . trước RUN pip install thì mỗi lần source code thay đổi, layer COPY sẽ thay đổi và Docker phải chạy lại RUN pip install. Điều này làm thời gian build lâu hơn dù requirements.txt không thay đổi.*
+> Nếu đặt COPY . . trước RUN pip install thì mỗi lần source code thay đổi, layer COPY sẽ thay đổi và Docker phải chạy lại RUN pip install. Điều này làm thời gian build lâu hơn dù requirements.txt không thay đổi.*
 
 ---
 
@@ -73,7 +73,7 @@ lệnh `USER` cắt đứt chuỗi đó ở chỗ nào.
 
 > *Nếu Python application có một lỗ hổng cho phép kẻ tấn công thực thi lệnh, các lệnh đó sẽ được thực thi với quyền của user đang chạy container. Nếu container chạy bằng root thì attacker có quyền rất cao bên trong container và nếu kết hợp với một lỗ hổng escape container hoặc cấu hình Docker không an toàn thì rủi ro có thể lan tới host.
 
-Lệnh USER appuser khiến process Python chạy bằng user không có quyền root. Vì vậy ngay cả khi attacker thực thi được lệnh thông qua lỗ hổng trong application, quyền của process bị giới hạn và giảm mức độ ảnh hưởng.*
+> Lệnh USER appuser khiến process Python chạy bằng user không có quyền root. Vì vậy ngay cả khi attacker thực thi được lệnh thông qua lỗ hổng trong application, quyền của process bị giới hạn và giảm mức độ ảnh hưởng.*
 
 ---
 
@@ -97,9 +97,9 @@ nhưng cost guard phải chặn, và một tình huống ngược lại.
 
 > *Rate limit giới hạn số lần request trong một khoảng thời gian, còn cost guard giới hạn tổng chi phí sử dụng của một user trong tháng.
 
-Ví dụ rate limit có thể cho qua một request vì user mới gửi vài request trong phút hiện tại, nhưng cost guard vẫn chặn nếu chi phí dự kiến của request làm tổng chi phí vượt monthly budget.
+> Ví dụ rate limit có thể cho qua một request vì user mới gửi vài request trong phút hiện tại, nhưng cost guard vẫn chặn nếu chi phí dự kiến của request làm tổng chi phí vượt monthly budget.
 
-Ngược lại, user có thể còn rất nhiều ngân sách nhưng gửi request với tốc độ quá nhanh. Khi đó cost guard vẫn cho phép nhưng rate limit sẽ trả về HTTP 429.*
+> Ngược lại, user có thể còn rất nhiều ngân sách nhưng gửi request với tốc độ quá nhanh. Khi đó cost guard vẫn cho phép nhưng rate limit sẽ trả về HTTP 429.*
 
 ---
 
@@ -110,9 +110,9 @@ Nếu gộp hai endpoint làm một và cho nó kiểm tra Redis, chuyện gì x
 
 > *Nếu /health cũng kiểm tra Redis, khi Redis mất kết nối thì cả 3 container đều bắt đầu trả trạng thái không khỏe thay vì chỉ /ready bị ảnh hưởng.
 
-Load balancer hoặc platform health check gọi /health trên từng container. Vì /health phụ thuộc Redis nên cả 3 container có thể bị đánh dấu unhealthy. Platform có thể restart hoặc loại từng container khỏi traffic. Trong khoảng Redis mất kết nối 30 giây, service có thể bị restart hàng loạt dù bản thân application process vẫn đang chạy. Khi Redis hoạt động lại, các container mới hoặc các container còn sống mới có thể trở lại trạng thái healthy.
+> Load balancer hoặc platform health check gọi /health trên từng container. Vì /health phụ thuộc Redis nên cả 3 container có thể bị đánh dấu unhealthy. Platform có thể restart hoặc loại từng container khỏi traffic. Trong khoảng Redis mất kết nối 30 giây, service có thể bị restart hàng loạt dù bản thân application process vẫn đang chạy. Khi Redis hoạt động lại, các container mới hoặc các container còn sống mới có thể trở lại trạng thái healthy.
 
-Thiết kế hiện tại tách /health và /ready: /health chỉ kiểm tra process, còn /ready kiểm tra Redis. Vì vậy mất Redis không đồng nghĩa application container bị coi là đã chết.*
+> Thiết kế hiện tại tách /health và /ready: /health chỉ kiểm tra process, còn /ready kiểm tra Redis. Vì vậy mất Redis không đồng nghĩa application container bị coi là đã chết.*
 
 ---
 
@@ -124,9 +124,9 @@ trong một dict Python thay vì Redis, bạn sẽ thấy con số đó thay đ�
 
 > *Nếu /health cũng kiểm tra Redis, khi Redis mất kết nối thì cả 3 container đều bắt đầu trả trạng thái không khỏe thay vì chỉ /ready bị ảnh hưởng.
 
-Load balancer hoặc platform health check gọi /health trên từng container. Vì /health phụ thuộc Redis nên cả 3 container có thể bị đánh dấu unhealthy. Platform có thể restart hoặc loại từng container khỏi traffic. Trong khoảng Redis mất kết nối 30 giây, service có thể bị restart hàng loạt dù bản thân application process vẫn đang chạy. Khi Redis hoạt động lại, các container mới hoặc các container còn sống mới có thể trở lại trạng thái healthy.
+> Load balancer hoặc platform health check gọi /health trên từng container. Vì /health phụ thuộc Redis nên cả 3 container có thể bị đánh dấu unhealthy. Platform có thể restart hoặc loại từng container khỏi traffic. Trong khoảng Redis mất kết nối 30 giây, service có thể bị restart hàng loạt dù bản thân application process vẫn đang chạy. Khi Redis hoạt động lại, các container mới hoặc các container còn sống mới có thể trở lại trạng thái healthy.
 
-Thiết kế hiện tại tách /health và /ready: /health chỉ kiểm tra process, còn /ready kiểm tra Redis. Vì vậy mất Redis không đồng nghĩa application container bị coi là đã chết.*
+> Thiết kế hiện tại tách /health và /ready: /health chỉ kiểm tra process, còn /ready kiểm tra Redis. Vì vậy mất Redis không đồng nghĩa application container bị coi là đã chết.*
 
 ---
 
