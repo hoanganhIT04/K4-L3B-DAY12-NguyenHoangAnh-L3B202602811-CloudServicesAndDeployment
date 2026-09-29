@@ -1,3 +1,6 @@
+[![CI/CD](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml/badge.svg)](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml)
+
+
 # K4 — Level 3B, Ngày 12: Hạ Tầng Cloud & Deployment (240 phút)
 
 Đưa một AI agent từ `localhost:8000` lên một địa chỉ công khai mà người khác
@@ -276,13 +279,13 @@ Nộp **link repository** lên Codelab. Repo phải ở chế độ public.
 
 ## Danh Sách Kiểm Tra Trước Khi Nộp
 
-- [ ] Repo đúng tên `K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment`
-- [ ] `pytest tests/ -v` — đã chạy và biết rõ test nào còn rớt, vì sao
-- [ ] `python grade.py` — xem điểm, mục tiêu ≥ 75/100
-- [ ] `exercises.md` — đủ 10 câu, viết bằng lời của mình
-- [ ] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
-- [ ] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
-- [ ] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
-- [ ] Không còn `NotImplementedError` nào trong `app/`
-- [ ] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
-- [ ] *(Bonus)* `.github/workflows/ci.yml` chạy xanh, README có badge `passing`
+- [x] Repo đúng tên `K4-L3B-DAY12-<HoVaTen>-<MSSV>-CloudServicesAndDeployment`
+- [x] `pytest tests/ -v` — đã chạy và biết rõ test nào còn rớt, vì sao
+- [x] `python grade.py` — xem điểm, mục tiêu ≥ 75/100
+- [x] `exercises.md` — đủ 10 câu, viết bằng lời của mình
+- [x] `DEPLOYMENT.md` — có Public URL thật, không dán giá trị API key
+- [x] `screenshots/` — có ảnh dashboard và ảnh gọi `/health`
+- [x] `.env` **không** nằm trong repo (`git ls-files | grep .env` chỉ ra `.env.example`)
+- [x] Không còn `NotImplementedError` nào trong `app/`
+- [x] Có commit ở nhiều mốc thời gian, không phải một commit duy nhất
+- [x] *(Bonus)* `.github/workflows/ci.yml` chạy xanh, README có badge `passing`
