@@ -1,5 +1,4 @@
-[![CI/CD](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml/badge.svg)](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml)
-
+[![CI/CD](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/hoanganhIT04/K4-L3B-DAY12-NguyenHoangAnh-L3B202602811-CloudServicesAndDeployment/actions/workflows/ci.yml)
 
 # K4 — Level 3B, Ngày 12: Hạ Tầng Cloud & Deployment (240 phút)
 
